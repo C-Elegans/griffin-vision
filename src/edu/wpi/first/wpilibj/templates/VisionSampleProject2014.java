@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.camera.AxisCamera;
 import edu.wpi.first.wpilibj.camera.AxisCameraException;
 import edu.wpi.first.wpilibj.image.*;
 import edu.wpi.first.wpilibj.image.NIVision.MeasurementType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Sample program to use NIVision to find rectangles in the scene that are illuminated
@@ -51,6 +52,12 @@ public class VisionSampleProject2014 extends SimpleRobot {
 
     //Maximum number of particles to process
     final int MAX_PARTICLES = 8;
+    int huemin = 180;       //values for threshold
+    int huemax = 220;
+    int satmin = 230;   
+    int satmax = 255;
+    int valmin = 133;
+    int valmax = 255;
 
     AxisCamera camera;          // the axis camera object (connected to the switch)
     CriteriaCollection cc;      // the criteria for doing the particle filter operation
@@ -76,6 +83,13 @@ public class VisionSampleProject2014 extends SimpleRobot {
         camera = AxisCamera.getInstance();  // get an instance of the camera
         cc = new CriteriaCollection();      // create the criteria for the particle filter
         cc.addCriteria(MeasurementType.IMAQ_MT_AREA, AREA_MINIMUM, 65535, false);
+        SmartDashboard.putNumber("huemin", huemin);
+        SmartDashboard.putNumber("huemax", huemax);
+        huemin = (int)SmartDashboard.getNumber("huemin");
+        huemax = (int)SmartDashboard.getNumber("huemax");
+    }
+    public void disabled(){
+        
     }
 
     public void autonomous() {
@@ -84,7 +98,7 @@ public class VisionSampleProject2014 extends SimpleRobot {
 	int horizontalTargets[] = new int[MAX_PARTICLES];
 	int verticalTargetCount, horizontalTargetCount;
         
-        while (isAutonomous() && isEnabled()) {
+        //while (isAutonomous() && isEnabled()) {          //commented to save crio flash memorty (only 100,000 writes before it fails
             try {
                 /**
                  * Do the image capture with the camera and apply the algorithm described above. This
@@ -96,7 +110,7 @@ public class VisionSampleProject2014 extends SimpleRobot {
                 //ColorImage image;   // next 2 lines read image from flash on cRIO
                 image.write("/vision/rawimage.bmp");
                 //image = new RGBImage("/testImage.jpg");		// get the sample image from the cRIO flash
-                BinaryImage thresholdImage = image.thresholdHSV(120, 200, 230, 255, 133, 255);
+                BinaryImage thresholdImage = image.thresholdHSV(huemin, huemax, 230, 255, 133, 255);
                 //BinaryImage thresholdImage = image.thresholdHSV(105, 137, 230, 255, 133, 183);// keep only green objects
                 thresholdImage.write("/vision/threshold.bmp");
                 BinaryImage filteredImage = thresholdImage.particleFilter(cc);           // filter out small particles
@@ -207,7 +221,7 @@ public class VisionSampleProject2014 extends SimpleRobot {
             } catch (NIVisionException ex) {
                 ex.printStackTrace();
             }
-        }
+        //}
     }
 
     /**
