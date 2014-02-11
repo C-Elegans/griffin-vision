@@ -87,6 +87,15 @@ public class VisionSampleProject2014 extends SimpleRobot {
         SmartDashboard.putNumber("huemax", huemax);
         huemin = (int)SmartDashboard.getNumber("huemin");
         huemax = (int)SmartDashboard.getNumber("huemax");
+        SmartDashboard.putNumber("satmin", satmin);
+        SmartDashboard.putNumber("satmax", satmax);
+        satmin = (int)SmartDashboard.getNumber("satmin");
+        satmax = (int)SmartDashboard.getNumber("satmax");
+        SmartDashboard.putNumber("valmin", valmin);
+        SmartDashboard.putNumber("valmax", valmax);
+        valmin = (int)SmartDashboard.getNumber("valmin");
+        valmax = (int)SmartDashboard.getNumber("valmax");
+        
     }
     public void disabled(){
         
